@@ -19,6 +19,19 @@
           <!-- Activities will be loaded here -->
           <p>Loading activities...</p>
         </div>
+        <template id="activity-card-template">
+          <div class="activity-card">
+            <h4 class="activity-name"></h4>
+            <p class="activity-description"></p>
+            <p><strong>Schedule:</strong> <span class="activity-schedule"></span></p>
+            <p><strong>Availability:</strong> <span class="activity-availability"></span></p>
+            <div class="participants-section">
+              <strong>Participants:</strong>
+              <ul class="participants-list"></ul>
+              <p class="no-participants hidden"></p>
+            </div>
+          </div>
+        </template>
       </section>
 
       <section id="signup-container">
