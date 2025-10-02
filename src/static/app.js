@@ -10,26 +10,41 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
       activitiesList.innerHTML = "";
 
-      // Populate activities list
+      const template = document.getElementById("activity-card-template");
+
       Object.entries(activities).forEach(([name, details]) => {
-        const activityCard = document.createElement("div");
-        activityCard.className = "activity-card";
+        const activityCard = template.content.cloneNode(true);
+
+        activityCard.querySelector(".activity-name").textContent = name;
+        activityCard.querySelector(".activity-description").textContent = details.description;
+        activityCard.querySelector(".activity-schedule").textContent = details.schedule;
 
         const spotsLeft = details.max_participants - details.participants.length;
+        activityCard.querySelector(".activity-availability").textContent = `${spotsLeft} spots left`;
 
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-        `;
+        const participantsList = activityCard.querySelector(".participants-list");
+        const noParticipantsMsg = activityCard.querySelector(".no-participants");
+
+        participantsList.innerHTML = "";
+        if (details.participants.length > 0) {
+          details.participants.forEach((participant) => {
+            const li = document.createElement("li");
+            li.className = "participant-item";
+            li.textContent = participant;
+            participantsList.appendChild(li);
+          });
+          participantsList.classList.remove("hidden");
+          noParticipantsMsg.classList.add("hidden");
+        } else {
+          participantsList.classList.add("hidden");
+          noParticipantsMsg.textContent = "No participants yet.";
+          noParticipantsMsg.classList.remove("hidden");
+        }
 
         activitiesList.appendChild(activityCard);
 
-        // Add option to select dropdown
         const option = document.createElement("option");
         option.value = name;
         option.textContent = name;
